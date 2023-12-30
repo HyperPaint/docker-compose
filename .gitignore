@@ -1,0 +1,9 @@
+# IDEA
+.idea/
+
+# Certs
+*.csr
+*.key
+*.pem
+*.crt
+*.srl
