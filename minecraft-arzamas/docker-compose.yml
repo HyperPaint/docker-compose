@@ -68,38 +68,32 @@ services:
         limits:
           memory: "32M"
         reservations:
-          cpus: "0.25"
+          cpus: "0.1"
           memory: "32M"
     environment:
       MCRCON_HOST: server
-      # Время CRON в UTC
+      # Параметры скриптов
       # backup.sh
-      BACKUP_CRON: "5 */6 * * *"
       BACKUP_DIRECTORY_SOURCE: /root/server
       BACKUP_DIRECTORY_TARGET: /root/backup
       BACKUP_HISTORY_COUNT: 4
-      BACKUP_TAR_PARAMS: "--exclude=./libraries --exclude=./cache --exclude=./versions --exclude=./plugins/dynmap/colorschemes --exclude=./plugins/dynmap/web"
+      BACKUP_TAR_PARAMS: ""
       # clear-drop.sh
-      CLEAR_DROP_CRON: "*/10 * * * *"
-      CLEAR_DROP_CHECK_TRIGGER: 1000
+      CLEAR_DROP_CHECK_TRIGGER: 300
       CLEAR_DROP_TIME_TO_WAIT: 30
       CLEAR_DROP_TIME_TO_WAIT_STEP: 5
       # reboot.sh
-      REBOOT_CRON: "55 20 * * *"
       REBOOT_TIME_TO_WAIT: 60
       REBOOT_TIME_TO_WAIT_STEP: 5
-      # custom-scripts
-      CUSTOM_SCRIPTS_ENABLED: 1
-    image: hyperpaint/minecraft-scheduler:6.2
+    image: hyperpaint/minecraft-scheduler:1.0.0-1
     networks:
       - default
     restart: always
-    stop_grace_period: 10m0s
     volumes:
       - server:/root/server:ro
+      - scheduler-logs:/root/logs:rw
+      - ./custom-scripts:/root/custom-scripts:rw
       - ./backup:/root/backup:rw
-      - ./custom-scripts:/root/custom-scripts:ro
-      - custom-scripts-log:/root/custom-scripts-log:rw
 
   proxy-http:
     depends_on:
@@ -108,10 +102,9 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.25"
           memory: "32M"
         reservations:
-          cpus: "0.125"
+          cpus: "0.1"
           memory: "32M"
     image: nginx:1.25.2
     networks:
@@ -120,11 +113,11 @@ services:
       - "80:80/tcp"
       - "443:443/tcp"
     restart: always
-    stop_grace_period: 10m0s
     volumes:
       - ./nginx-config:/etc/nginx/conf.d:ro
       - ./nginx-certs/nginx-self-signed.key:/etc/nginx/certificate.key:ro
       - ./nginx-certs/nginx-self-signed.pem:/etc/nginx/certificate.pem:ro
+      - ./nginx-data:/usr/share/nginx/html:ro
 
 networks:
   default:
@@ -138,5 +131,5 @@ volumes:
     name: minecraft-database
   server:
     name: minecraft-arzamas-server
-  custom-scripts-log:
-    name: minecraft-arzamas-custom-scripts-log
+  scheduler-logs:
+    name: minecraft-arzamas-scheduler-logs
