@@ -1,0 +1,136 @@
+name: monitoring
+services:
+  grafana:
+    depends_on:
+      - prometheus
+      - loki
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: "256M"
+        reservations:
+          cpus: "0.1"
+          memory: "128M"
+    image: grafana/grafana-enterprise:10.0.8
+    networks:
+      - default
+    restart: always
+    volumes:
+      - grafana:/var/lib/grafana
+      - ./grafana-datasource-prometheus.yml:/etc/grafana/provisioning/datasources/prometheus.yml:ro
+      - ./grafana-datasource-loki.yml:/etc/grafana/provisioning/datasources/loki.yml:ro
+
+  prometheus:
+    depends_on:
+      - node-exporter
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: "256M"
+        reservations:
+          cpus: "0.125"
+          memory: "128M"
+    image: prom/prometheus:v2.47.1
+    networks:
+      - default
+    restart: always
+    volumes:
+      - prometheus:/prometheus
+      - ./prometheus-config.yml:/etc/prometheus/prometheus.yml:ro
+
+  node-exporter:
+    command: "--path.rootfs=/host"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: "32M"
+        reservations:
+          cpus: "0.1"
+          memory: "32M"
+    image: prom/node-exporter:v1.6.1
+    network_mode: host
+    pid: host
+    restart: always
+    volumes:
+      - "/:/host:ro,rslave"
+
+  loki:
+    command: "-config.file=/etc/loki/config.yml"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: "256M"
+        reservations:
+          cpus: "0.1"
+          memory: "128M"
+    image: grafana/loki:2.9.1
+    networks:
+      - default
+    restart: always
+    volumes:
+      - loki:/home/loki
+      - ./loki-config.yml:/etc/loki/config.yml:ro
+
+  promtail:
+    command: "-config.file=/etc/promtail/config.yml"
+    depends_on:
+      - loki
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: "32M"
+        reservations:
+          cpus: "0.1"
+          memory: "32M"
+    image: grafana/promtail:2.9.1
+    user: root:root
+    networks:
+      - default
+    restart: always
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/config.yml:ro
+
+  ingress:
+    depends_on:
+      - grafana
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: "32M"
+        reservations:
+          cpus: "0.1"
+          memory: "32M"
+    image: nginx:1.25.2
+    networks:
+      - default
+    ports:
+      - mode: ingress
+        target: 80
+        published: "80"
+        protocol: tcp
+      - mode: ingress
+        target: 443
+        published: "443"
+        protocol: tcp
+    restart: always
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d:ro
+      - ./nginx-certs/nginx-self-signed.key:/etc/nginx/certificate.key:ro
+      - ./nginx-certs/nginx-self-signed.pem:/etc/nginx/certificate.pem:ro
+
+networks:
+  default:
+    name: monitoring-default
+volumes:
+  grafana:
+    name: monitoring-grafana
+  prometheus:
+    name: monitoring-prometheus
+  loki:
+    name: monitoring-loki
