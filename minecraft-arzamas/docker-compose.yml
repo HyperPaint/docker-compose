@@ -5,6 +5,7 @@ services:
     deploy:
       resources:
         limits:
+          cpus: "1"
           memory: "512M"
         reservations:
           cpus: "1"
@@ -30,6 +31,7 @@ services:
     deploy:
       resources:
         limits:
+          cpus: "2"
           memory: "4G"
         reservations:
           cpus: "2"
