@@ -1,0 +1,30 @@
+name: factorio
+services:
+
+  server:
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "512M"
+        reservations:
+          cpus: "1"
+          memory: "512M"
+    image: hyperpaint/factorio:1.1.101
+    networks:
+      - default
+    ports:
+      - "34197:34197/udp"
+    restart: always
+    stop_grace_period: 10m0s
+    volumes:
+      - server:/root/server:rw
+      - ./server-settings.json:/root/server/data/server-settings.json:ro
+
+networks:
+  default:
+    name: factorio-default
+
+volumes:
+  server:
+    name: factorio-server
