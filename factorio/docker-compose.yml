@@ -18,8 +18,8 @@ services:
     restart: always
     stop_grace_period: 10m0s
     volumes:
-      - server:/root/server:rw
       - ./server-settings.json:/root/server/data/server-settings.json:ro
+      - server:/root/server:rw
 
 networks:
   default:
