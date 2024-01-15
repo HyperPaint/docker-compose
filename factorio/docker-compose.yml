@@ -5,20 +5,24 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1"
+          cpus: "0.5"
           memory: "512M"
         reservations:
-          cpus: "1"
+          cpus: "0.5"
           memory: "512M"
+    environment:
+      WHITELIST: "1"
     image: hyperpaint/factorio:1.1.101
     networks:
       - default
     ports:
       - "34197:34197/udp"
     restart: always
-    stop_grace_period: 10m0s
     volumes:
       - ./server-settings.json:/root/server/data/server-settings.json:ro
+      - ./server-adminlist.json:/root/server/data/server-adminlist.json:rw
+      - ./server-banlist.json:/root/server/data/server-banlist.json:rw
+      - ./server-whitelist.json:/root/server/data/server-whitelist.json:rw
       - server:/root/server:rw
 
 networks:
