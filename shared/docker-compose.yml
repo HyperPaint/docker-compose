@@ -1,0 +1,35 @@
+name: shared
+services:
+
+  database:
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "512M"
+        reservations:
+          cpus: "0.1"
+          memory: "512M"
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+    image: mysql:8
+    networks:
+      - default
+      - monitoring
+    ports:
+      - "127.0.0.1:3306:3306/tcp"
+    restart: always
+    stop_grace_period: 10m0s
+    volumes:
+      - ./mysql-config:/etc/mysql/conf.d:ro
+      - database:/var/lib/mysql:rw
+
+networks:
+  default:
+    name: shared-default
+  monitoring:
+    name: monitoring-default
+    external: true
+
+volumes:
+  database:
