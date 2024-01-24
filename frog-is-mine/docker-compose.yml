@@ -10,7 +10,7 @@ services:
         reservations:
           cpus: "0.1"
           memory: "512M"
-    image: hyperpaint/wordpress:6.2
+    image: hyperpaint/wordpress:6.4.2
     networks:
       - default
       - shared
