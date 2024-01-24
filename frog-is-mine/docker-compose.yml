@@ -1,0 +1,60 @@
+name: frog-is-mine
+services:
+
+  wordpress:
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "512M"
+        reservations:
+          cpus: "0.1"
+          memory: "512M"
+    image: hyperpaint/wordpress:6.2
+    networks:
+      - default
+      - shared
+    restart: always
+    volumes:
+      - ./wordpress-config/wp-config.php:/var/www/html/wp-config.php:rw
+      - ./wordpress-config/htaccess:/var/www/html/.htaccess:rw
+      - wordpress-plugins:/var/www/html/wp-content/plugins:rw
+      - wordpress-themes:/var/www/html/wp-content/themes:rw
+      - wordpress-data:/var/www/html/wp-content/uploads:rw
+
+  proxy-http:
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "32M"
+        reservations:
+          cpus: "0.1"
+          memory: "32M"
+    image: nginx:1.25.2
+    networks:
+      - default
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+    restart: always
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d:ro
+      - ./nginx-certs/nginx-self-signed.key:/etc/nginx/certificate.key:ro
+      - ./nginx-certs/nginx-self-signed.pem:/etc/nginx/certificate.pem:ro
+      - ./nginx-data:/usr/share/nginx/html:ro
+
+networks:
+  default:
+    name: frog-is-mine-default
+  shared:
+    name: shared-default
+    external: true
+
+volumes:
+  wordpress-plugins:
+  wordpress-themes:
+  wordpress-data:
