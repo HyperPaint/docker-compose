@@ -16,8 +16,8 @@ services:
       - shared
     restart: always
     volumes:
-      - ./wordpress-config/wp-config.php:/var/www/html/wp-config.php:rw
-      - ./wordpress-config/htaccess:/var/www/html/.htaccess:rw
+      - ./wordpress-config/wp-config.php:/var/www/html/wp-config.php:ro
+      - ./wordpress-config/htaccess:/var/www/html/.htaccess:ro
       - wordpress-plugins:/var/www/html/wp-content/plugins:rw
       - wordpress-themes:/var/www/html/wp-content/themes:rw
       - wordpress-data:/var/www/html/wp-content/uploads:rw
@@ -43,13 +43,13 @@ services:
     restart: always
     volumes:
       - ./nginx-config:/etc/nginx/conf.d:ro
-      - ./nginx-certs/nginx-self-signed.key:/etc/nginx/certificate.key:ro
-      - ./nginx-certs/nginx-self-signed.pem:/etc/nginx/certificate.pem:ro
+      #- ./nginx-certs/nginx-self-signed.key:/etc/nginx/certificate.key:ro
+      #- ./nginx-certs/nginx-self-signed.pem:/etc/nginx/certificate.pem:ro
+      - ./nginx-certs/hyperpaint.asuscomm.com.key:/etc/nginx/certificate.key:ro
+      - ./nginx-certs/hyperpaint.asuscomm.com.pem:/etc/nginx/certificate.pem:ro
       - ./nginx-data:/usr/share/nginx/html:ro
 
 networks:
-  default:
-    name: frog-is-mine-default
   shared:
     name: shared-default
     external: true

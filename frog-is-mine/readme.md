@@ -1,9 +1,16 @@
-# Plugins
+# Frog is Mine
+
+## Plugins
+
 Disable WP REST API
 LiteSpeed Cache
 Password bcrypt
-Quiz Maker
+// Quiz Maker
 Ultimate Member
 WP Mail SMTP
 WPForms Lite
 Yoast SEO
+
+## Theme
+
+Kadence

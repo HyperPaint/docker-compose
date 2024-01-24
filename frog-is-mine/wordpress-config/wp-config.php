@@ -1,4 +1,7 @@
 <?php
+define( 'WP_CACHE', true );
+
+
 /**
  * Основные параметры WordPress.
  *
@@ -85,7 +88,6 @@ define( 'WP_DEBUG', false );
 define( 'FS_METHOD', 'direct' );
 define( 'WP_AUTO_UPDATE_CORE', false );
 
-
 # HTTPS
 $_SERVER['REQUEST_SCHEME'] = 'https';
 $_SERVER['HTTPS'] = 'on';
@@ -93,6 +95,7 @@ $_SERVER['HTTPS'] = 'on';
 # Директория
 define( 'WP_HOME', '/blog' );
 define( 'WP_SITEURL', '/blog' );
+
 # Дашборд
 $count = 1;
 $_SERVER['REQUEST_URI'] = str_replace('/wp-admin/', '/blog/wp-admin/', $_SERVER['REQUEST_URI'], $count);
