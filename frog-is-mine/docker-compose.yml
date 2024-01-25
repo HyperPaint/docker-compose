@@ -50,6 +50,7 @@ services:
       - ./nginx-data:/usr/share/nginx/html:ro
 
 networks:
+  default:
   shared:
     name: shared-default
     external: true

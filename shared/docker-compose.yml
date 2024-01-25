@@ -26,9 +26,8 @@ services:
 
 networks:
   default:
-    name: shared-default
   monitoring:
-    name: monitoring-default
+    name: monitoring_default
     external: true
 
 volumes:
