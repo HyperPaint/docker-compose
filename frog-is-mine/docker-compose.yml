@@ -18,6 +18,7 @@ services:
     volumes:
       - ./wordpress-config/wp-config.php:/var/www/html/wp-config.php:ro
       - ./wordpress-config/htaccess:/var/www/html/.htaccess:ro
+      - wordpress-mu-plugins:/var/www/html/wp-content/mu-plugins:rw
       - wordpress-plugins:/var/www/html/wp-content/plugins:rw
       - wordpress-themes:/var/www/html/wp-content/themes:rw
       - wordpress-data:/var/www/html/wp-content/uploads:rw
@@ -56,6 +57,7 @@ networks:
     external: true
 
 volumes:
+  wordpress-mu-plugins:
   wordpress-plugins:
   wordpress-themes:
   wordpress-data:
