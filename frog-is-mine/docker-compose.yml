@@ -44,10 +44,10 @@ services:
     restart: always
     volumes:
       - ./nginx-config:/etc/nginx/conf.d:ro
-      #- ./nginx-certs/nginx-self-signed.key:/etc/nginx/certificate.key:ro
-      #- ./nginx-certs/nginx-self-signed.pem:/etc/nginx/certificate.pem:ro
-      - ./nginx-certs/hyperpaint.asuscomm.com.key:/etc/nginx/certificate.key:ro
-      - ./nginx-certs/hyperpaint.asuscomm.com.pem:/etc/nginx/certificate.pem:ro
+      - ./nginx-certs/nginx-self-signed.key:/etc/nginx/certificate.key:ro
+      - ./nginx-certs/nginx-self-signed.pem:/etc/nginx/certificate.pem:ro
+      #- ./nginx-certs/hyperpaint.asuscomm.com.key:/etc/nginx/certificate.key:ro
+      #- ./nginx-certs/hyperpaint.asuscomm.com.pem:/etc/nginx/certificate.pem:ro
       - ./nginx-data:/usr/share/nginx/html:ro
 
 networks:
