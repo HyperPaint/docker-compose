@@ -1,6 +1,4 @@
 <?php
-define( 'WP_CACHE', true );
-
 
 /**
  * Основные параметры WordPress.
@@ -87,6 +85,9 @@ define( 'WP_DEBUG', false );
 
 define( 'FS_METHOD', 'direct' );
 define( 'WP_AUTO_UPDATE_CORE', false );
+
+# Cache
+define( 'WP_CACHE', true );
 
 # HTTPS
 $_SERVER['REQUEST_SCHEME'] = 'https';
