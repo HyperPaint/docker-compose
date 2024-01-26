@@ -52,7 +52,7 @@ services:
 networks:
   default:
   shared:
-    name: shared-default
+    name: shared_default
     external: true
 
 volumes:

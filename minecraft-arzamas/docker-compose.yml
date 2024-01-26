@@ -126,6 +126,9 @@ services:
 networks:
   default:
     name: minecraft-arzamas-default
+  shared:
+    name: shared_default
+    external: true
   monitoring:
     name: monitoring-default
     external: true

@@ -32,7 +32,7 @@ define( 'DB_USER', 'root' );
 define( 'DB_PASSWORD', 'password' );
 
 /** Имя сервера базы данных */
-define( 'DB_HOST', 'database.shared-default' );
+define( 'DB_HOST', 'database.shared_default' );
 
 /** Кодировка базы данных для создания таблиц. */
 define( 'DB_CHARSET', 'utf8mb4' );
