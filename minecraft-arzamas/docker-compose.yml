@@ -1,37 +1,11 @@
 name: minecraft-arzamas
 services:
 
-  database:
-    deploy:
-      resources:
-        limits:
-          cpus: "1.0"
-          memory: "512M"
-        reservations:
-          cpus: "0.1"
-          memory: "512M"
-    environment:
-      MYSQL_ROOT_PASSWORD: "password"
-    image: mysql:8
-    networks:
-      - default
-      - monitoring
-    ports:
-      - "127.0.0.1:3306:3306/tcp"
-    restart: always
-    stop_grace_period: 10m0s
-    volumes:
-      - ./mysql-config:/etc/mysql/conf.d:ro
-      - database:/var/lib/mysql:rw
-
   server:
-    depends_on:
-      database:
-        condition: service_started
     deploy:
       resources:
         limits:
-          cpus: "1.0"
+          cpus: "2.0"
           memory: "4G"
         reservations:
           cpus: "0.1"
@@ -47,9 +21,12 @@ services:
         -XX:+UseDynamicNumberOfGCThreads
         -Dsun.rmi.dgc.client.gcInterval=2147483646 -Dsun.rmi.dgc.server.gcInterval=2147483646
         -Dcom.sun.management.jmxremote.port=1234 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false 
+    healthcheck:
+      start_period: 10m
     image: hyperpaint/minecraft-arzamas:1.20.1
     networks:
       - default
+      - shared
       - monitoring
     ports:
       - "25565:25565/tcp"
@@ -91,6 +68,7 @@ services:
     image: hyperpaint/minecraft-scheduler:1.0.0-1
     networks:
       - default
+      - shared
     restart: always
     volumes:
       - server:/root/server:ro
@@ -113,9 +91,9 @@ services:
     image: nginx:1.25.2
     networks:
       - default
-    ports:
-      - "80:80/tcp"
-      - "443:443/tcp"
+    #ports:
+    #  - "80:80/tcp"
+    #  - "443:443/tcp"
     restart: always
     volumes:
       - ./nginx-config:/etc/nginx/conf.d:ro
@@ -125,18 +103,13 @@ services:
 
 networks:
   default:
-    name: minecraft-arzamas-default
   shared:
     name: shared_default
     external: true
   monitoring:
-    name: monitoring-default
+    name: monitoring_default
     external: true
 
 volumes:
-  database:
-    name: minecraft-database
   server:
-    name: minecraft-arzamas-server
   scheduler-logs:
-    name: minecraft-arzamas-scheduler-logs
