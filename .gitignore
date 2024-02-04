@@ -7,3 +7,6 @@
 *.pem
 *.crt
 *.srl
+
+# OpenVPN may contain certs
+*.ovpn

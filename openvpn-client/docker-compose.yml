@@ -1,0 +1,19 @@
+name: openvpn-client
+services:
+
+  server:
+    cap_add:
+      - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: "32M"
+        reservations:
+          cpus: "0.1"
+          memory: "32M"
+    image: hyperpaint/openvpn-client:1
+    network_mode: host
+    restart: always
+    volumes:
+      - ./client.ovpn:/root/client.ovpn:ro
