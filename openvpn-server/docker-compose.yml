@@ -1,0 +1,35 @@
+name: openvpn-server
+services:
+
+  server:
+    cap_add:
+      - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: "32M"
+        reservations:
+          cpus: "0.1"
+          memory: "32M"
+    environment:
+      CERTS_CN_BASE: openvpn
+      VPN_NAT_ENABLE: 1
+      VPN_NAT: "10.0.0.0/8"
+      VPN_LAN_DISABLE: 1
+      VPN_LAN_FROM: "10.0.0.0/8"
+      VPN_LAN_TO: "172.16.0.0/12 192.168.0.0/16"
+    image: hyperpaint/openvpn-server:3
+    networks:
+      - default
+    ports:
+      - "1194:1194/udp"
+    restart: always
+    volumes:
+      - ./ccd:/root/ccd:ro
+      - ./certs:/root/certs:rw
+      - ./ipp.txt:/root/ipp.txt:rw
+      - ./server.conf:/root/server.conf:ro
+
+networks:
+  default:
