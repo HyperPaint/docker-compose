@@ -8,5 +8,5 @@
 *.crt
 *.srl
 
-# OpenVPN may contain certs
+# OpenVPN может содержать сертификаты
 *.ovpn
