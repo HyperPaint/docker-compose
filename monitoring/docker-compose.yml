@@ -16,9 +16,12 @@ services:
     image: grafana/grafana-enterprise:10.0.8
     networks:
       - default
+      - shared
+    ports:
+      - "127.0.0.1:3000:3000/tcp"
     restart: always
     volumes:
-      - grafana:/var/lib/grafana
+      - grafana:/var/lib/grafana:rw
       - ./grafana-datasource-prometheus.yml:/etc/grafana/provisioning/datasources/prometheus.yml:ro
       - ./grafana-datasource-loki.yml:/etc/grafana/provisioning/datasources/loki.yml:ro
 
@@ -38,7 +41,7 @@ services:
       - default
     restart: always
     volumes:
-      - prometheus:/prometheus
+      - prometheus:/prometheus:rw
       - ./prometheus-config.yml:/etc/prometheus/prometheus.yml:ro
 
   node-exporter:
@@ -73,7 +76,7 @@ services:
       - default
     restart: always
     volumes:
-      - loki:/home/loki
+      - loki:/home/loki:rw
       - ./loki-config.yml:/etc/loki/config.yml:ro
 
   promtail:
@@ -96,30 +99,11 @@ services:
     volumes:
       - ./promtail-config.yml:/etc/promtail/config.yml:ro
 
-  ingress:
-    depends_on:
-      - grafana
-    deploy:
-      resources:
-        limits:
-          cpus: "0.25"
-          memory: "32M"
-        reservations:
-          cpus: "0.1"
-          memory: "32M"
-    image: nginx:1.25.2
-    networks:
-      - default
-    ports:
-      - "8443:443/tcp"
-    restart: always
-    volumes:
-      - ./nginx-config:/etc/nginx/conf.d:ro
-      - ./nginx-certs/nginx-self-signed.key:/etc/nginx/certificate.key:ro
-      - ./nginx-certs/nginx-self-signed.pem:/etc/nginx/certificate.pem:ro
-
 networks:
   default:
+  shared:
+    name: shared_default
+    external: true
 
 volumes:
   grafana:
