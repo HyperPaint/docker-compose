@@ -6,11 +6,11 @@ services:
       resources:
         limits:
           cpus: "1"
-          memory: "512M"
+          memory: "384M"
         reservations:
           cpus: "0.1"
-          memory: "512M"
-    image: hyperpaint/wordpress:6.4.2
+          memory: "384M"
+    image: hyperpaint/wordpress:6.4.3
     networks:
       - default
       - shared
@@ -18,9 +18,12 @@ services:
     volumes:
       - ./wordpress-config/wp-config.php:/var/www/html/wp-config.php:ro
       - ./wordpress-config/htaccess:/var/www/html/.htaccess:ro
+      - ./wordpress-config/advanced-cache.php:/var/www/html/wp-content/advanced-cache.php:ro
+      - ./wordpress-config/wp-cache-config.php:/var/www/html/wp-content/wp-cache-config.php:ro
       - wordpress-mu-plugins:/var/www/html/wp-content/mu-plugins:rw
       - wordpress-plugins:/var/www/html/wp-content/plugins:rw
       - wordpress-themes:/var/www/html/wp-content/themes:rw
+      - wordpress-languages:/var/www/html/wp-content/languages:rw
       - wordpress-data:/var/www/html/wp-content/uploads:rw
 
   proxy-http:
@@ -41,13 +44,12 @@ services:
     ports:
       - "80:80/tcp"
       - "443:443/tcp"
+      - "8443:8443/tcp"
     restart: always
     volumes:
       - ./nginx-config:/etc/nginx/conf.d:ro
-      #- ./nginx-certs/nginx-self-signed.key:/etc/nginx/certificate.key:ro
-      #- ./nginx-certs/nginx-self-signed.pem:/etc/nginx/certificate.pem:ro
-      - ./nginx-certs/hyperpaint.asuscomm.com.key:/etc/nginx/certificate.key:ro
-      - ./nginx-certs/hyperpaint.asuscomm.com.pem:/etc/nginx/certificate.pem:ro
+      - ./nginx-certs/nginx-self-signed.key:/etc/nginx/certificate.key:ro
+      - ./nginx-certs/nginx-self-signed.pem:/etc/nginx/certificate.pem:ro
       - ./nginx-data:/usr/share/nginx/html:ro
 
 networks:
@@ -60,4 +62,5 @@ volumes:
   wordpress-mu-plugins:
   wordpress-plugins:
   wordpress-themes:
+  wordpress-languages:
   wordpress-data:

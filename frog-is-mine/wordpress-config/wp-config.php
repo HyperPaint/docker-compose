@@ -88,14 +88,16 @@ define( 'WP_AUTO_UPDATE_CORE', false );
 
 # Cache
 define( 'WP_CACHE', true );
+define( 'WPCACHEHOME', '/var/www/html/wp-content/plugins/wp-super-cache/' );
 
 # HTTPS
 $_SERVER['REQUEST_SCHEME'] = 'https';
 $_SERVER['HTTPS'] = 'on';
 
 # Директория
-define( 'WP_HOME', '/blog' );
-define( 'WP_SITEURL', '/blog' );
+define( 'WP_HOME', 'https://localhost/blog' );
+define( 'WP_SITEURL', 'https://localhost/blog' );
+$_SERVER['REQUEST_URI'] = '/blog' . $_SERVER['REQUEST_URI'];
 
 # Дашборд
 $count = 1;
